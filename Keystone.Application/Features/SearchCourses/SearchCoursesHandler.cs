@@ -14,9 +14,9 @@ public class SearchCoursesHandler(ICourseRepository courseRepository, IMapper ma
     public async Task<CourseTableResponse> Handle(SearchQueryRequest request,
         CancellationToken cancellationToken)
     {
-        var courses = new List<Course>();
+        List<Course> courses;
         var coursesQuery = await courseRepository.Query(cancellationToken); 
-        int totalCourses = coursesQuery.Count();
+        var totalCourses = coursesQuery.Count();
         if (string.IsNullOrEmpty(request.Query))
             courses = coursesQuery.Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
