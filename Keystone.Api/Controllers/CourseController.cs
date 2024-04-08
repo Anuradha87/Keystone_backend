@@ -19,7 +19,7 @@ public class CourseController(IMediator mediator) : ControllerBase
     }
     
     [HttpGet ("search")]
-    public async Task<ActionResult<List<GetAllCourseResponse>>> GetAll([FromQuery] SearchQueryRequest request,CancellationToken cancellationToken)
+    public async Task<ActionResult<List<GetAllCourseResponse>>> Search([FromQuery] SearchQueryRequest request,CancellationToken cancellationToken)
     {
         var response = await mediator.Send(request, cancellationToken);
         return Ok(response);
