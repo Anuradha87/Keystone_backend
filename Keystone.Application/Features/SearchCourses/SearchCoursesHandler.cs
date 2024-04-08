@@ -15,7 +15,7 @@ public class SearchCoursesHandler(ICourseRepository courseRepository, IMapper ma
         CancellationToken cancellationToken)
     {
         List<Course> courses;
-        var coursesQuery = await courseRepository.Query(cancellationToken); 
+        var coursesQuery = await courseRepository.Query(cancellationToken);
         var totalCourses = coursesQuery.Count();
         if (string.IsNullOrEmpty(request.Query))
             courses = coursesQuery.Skip((request.PageNumber - 1) * request.PageSize)
@@ -25,24 +25,23 @@ public class SearchCoursesHandler(ICourseRepository courseRepository, IMapper ma
         {
             courses = coursesQuery
                 .Where(x =>
-                    x.Name.Contains(request.Query) ||
-                    x.Institute.Contains(request.Query) ||
-                    x.Location.Contains(request.Query)) .ToList();
-             totalCourses = courses.Count();   
-                
-            courses= courses.Skip((request.PageNumber - 1) * request.PageSize)
+                    x.Name.ToLower().Contains(request.Query.ToLower()) ||
+                    x.Institute.ToLower().Contains(request.Query.ToLower()) ||
+                    x.Location.ToLower().Contains(request.Query.ToLower()))
+                .ToList();
+            totalCourses = courses.Count();
+
+            courses = courses.Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
                 .ToList();
-          
         }
 
-        var  mappedResponse= mapper.Map<List<SearchResponse>>(courses);
-        
+        var mappedResponse = mapper.Map<List<SearchResponse>>(courses);
+
         return new CourseTableResponse
         {
             Courses = mappedResponse,
             TotalCourses = totalCourses
         };
-        
     }
 }
